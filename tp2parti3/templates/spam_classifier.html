@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classificateur de Spam</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container-custom {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        textarea {
+            border-radius: 5px;
+            border: 2px solid #e0e0e0;
+            font-size: 14px;
+        }
+        textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 5px;
+            padding: 10px 30px;
+            font-weight: 600;
+            width: 100%;
+            transition: transform 0.2s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .alert {
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .result-box {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .result-spam {
+            background-color: #f8d7da;
+            border: 2px solid #f5c6cb;
+        }
+        .result-not-spam {
+            background-color: #d4edda;
+            border: 2px solid #c3e6cb;
+        }
+        .result-text {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .result-spam .result-text {
+            color: #721c24;
+        }
+        .result-not-spam .result-text {
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-custom">
+        <h1>🚨 Classificateur de Spam</h1>
+        
+        {% if erreur %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Erreur :</strong> {{ erreur }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        
+        <form method="POST" action="/predict">
+            <div class="form-group">
+                <label for="email">Saisissez le contenu de l'email :</label>
+                <textarea class="form-control" id="email" name="email" rows="8" placeholder="Collez ici le contenu de l'email à vérifier..." required>{{ email if email else '' }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Vérifier</button>
+        </form>
+        
+        {% if prediction_made %}
+        <div class="result-box {% if result == 'SPAM' %}result-spam{% else %}result-not-spam{% endif %}">
+            {% if result == 'SPAM' %}
+            <div style="font-size: 40px;">⚠️</div>
+            <div class="result-text">ATTENTION : SPAM DÉTECTÉ</div>
+            <p>Cet email est classé comme <strong>SPAM</strong></p>
+            {% else %}
+            <div style="font-size: 40px;">✅</div>
+            <div class="result-text">EMAIL LÉGITIME</div>
+            <p>Cet email est classé comme <strong>NON SPAM</strong></p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
